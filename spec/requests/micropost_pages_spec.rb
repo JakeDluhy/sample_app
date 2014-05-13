@@ -40,5 +40,15 @@ describe "MicropostPages" do
     it "should delete a micropost" do
       expect { click_link "delete" }.to change(Micropost, :count).by(-1)
     end
+
+    describe "should not see links to delete another user's posts" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before do
+        FactoryGirl.create(:micropost, user: other_user)
+        visit user_path(other_user)
+      end
+
+      it { should_not have_link('delete', href: root_path)}
+    end
   end
 end
